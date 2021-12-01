@@ -66,16 +66,16 @@ console.log('');
 	//This method have too many permissions, maybe we should split it one day?
 	const bridge2 = async function(gasPrice1, balance, value1, deposit, address, res, address2, end2, MintyFundTX, gasFee, MintyPrivateKey, MintME, BSC, EUBI, fee, mul2){
 		//Calculate if EUBI sent is enough for bridge fee
-		let postFee = balance.sub(fee).toString();
-		if(postFee.startsWith('-')){
+		let postFee = balance.sub(fee);
+		if(postFee.toString().startsWith('-')){
 			res.writeHead(200, {"Access-Control-Allow-Origin": "*"});
 			res.write('Minimum conversion: 10 EUBI!');
 			end2();
 		} else{
 			//Start asynchronous transaction signing as soo as freaking possible!
-			let BSCTX = BSC.accounts.privateKeyToAccount(MintyPrivateKey).signTransaction({chainId: "56", gas: "100000", to: '0x27fAAa5bD713DCd4258D5C49258FBef45314ae5D', data: EUBI.methods.transfer(address2, new BigInt(postFee).mul(mul2).toString()).encodeABI()});
+			let BSCTX = BSC.accounts.privateKeyToAccount(MintyPrivateKey).signTransaction({chainId: "56", gas: "100000", to: '0x27fAAa5bD713DCd4258D5C49258FBef45314ae5D', data: EUBI.methods.transfer(address2, postFee.mul(mul2).toString()).encodeABI()});
 			MintyPrivateKey = undefined;
-			let MintX2 = deposit.signTransaction({chainId: "24734", gasPrice: gasPrice1, gas: "100000", to: '0x8AFA1b7a8534D519CB04F4075D3189DF8a6738C1', data: EUBI.methods.transfer(MintMEWallet.address, balance).encodeABI()});
+			let MintX2 = deposit.signTransaction({chainId: "24734", gasPrice: gasPrice1, gas: "100000", to: '0x8AFA1b7a8534D519CB04F4075D3189DF8a6738C1', data: EUBI.methods.transfer('0x77c4529FC9D0446642EB29cE33b8B2afD43926d0', balance).encodeABI()});
 						
 			//load up some gas - send MintME to the deposit address if the're not enough for 100,000 gas
 			if(value1.sub(gasFee).toString().startsWith('-')){
