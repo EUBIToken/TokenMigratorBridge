@@ -264,5 +264,11 @@ console.log('');
 		console.log('Starting HTTP Listener...');
 		hserver.setTimeout(120000);
 		hserver.listen(process.env.PORT || 80);
+		process.on('SIGTERM', async function(){
+			if(hserver){
+				hserver.close();
+				hserver = null;
+			}
+		});
 	}
 }
